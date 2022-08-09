@@ -1,16 +1,15 @@
 {% extends 'scrap_pickups_app/base.html' %}
-{% block title %}Scrapgoat Home{% endblock %}
+{% block title %}Profile Page{% endblock %}
 {% block content %}
-<h1>Scapegoat Pickups</h1>
+<h1>Profile Info</h1>
 <hr/>
 <p>
-    You may submit a scrap pick up request below.<br/>
-    You can also login to save your user info and set common pick up locations.
+    You can save your details for pickups.
 </p>
 
 <!--Form when user is not logged in-->
 <div align="left">
-    <form method="post" action="{% url 'index' %}">
+    <form method="post" action="{% url 'profile_info' %}">
         {% csrf_token %}
         {{form.as_p}}
         <button type="submit" class="btn btn-primary">Submit</button>

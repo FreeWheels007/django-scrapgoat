@@ -2,10 +2,37 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractUser
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class User(AbstractUser):
     pass
+    # name = models.CharField(max_length=200, blank=True, null=True)
+    # phone = models.CharField(max_length=200, blank=True, null=True)
+    # cell = models.CharField(max_length=200, blank=True, null=True)
+    #
+    # def __str__(self):
+    #     return f'name={self.name}, email={self.email}, phone={self.phone}, cell={self.cell}'
+
+
+class Profile(models.Model):
+
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, )
+    name = models.CharField(max_length=200, blank=True, null=True)
+    phone = models.CharField(max_length=200, blank=True, null=True)
+    cell = models.CharField(max_length=200, blank=True, null=True)
+
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def save_profile(sender, instance, **kwargs):
+    instance.profile.save()
 
 
 class Pickup(models.Model):
@@ -23,14 +50,18 @@ class Pickup(models.Model):
     location = models.CharField(max_length=200)
     details = models.CharField(max_length=500)
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
-    date_posted = models.DateTimeField(auto_now=True)
+    date_posted = models.DateTimeField(auto_now_add=True, auto_now=False)
     date_finished = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return f'name={self.name}, email={self.email}, loc={self.location}, status={self.status}'
+        return f'name={self.name}, email={self.email}, loc={self.location}, status={self.status}' \
+               f'created={self.date_posted}'
 
 
 class UserSavedLocation(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     address = models.CharField(max_length=200)
+
+    def __str__(self):
+        return f'address={self.address}'
