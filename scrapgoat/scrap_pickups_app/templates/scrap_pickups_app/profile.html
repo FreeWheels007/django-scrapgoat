@@ -12,6 +12,12 @@
     <form method="post" action="{% url 'profile_info' %}">
         {% csrf_token %}
         {{form.as_p}}
+        {{usls.management_form}}
+        {% for usl in usls %}
+        <div>
+            {{usl.as_p}}
+        </div>
+        {% endfor %}
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>

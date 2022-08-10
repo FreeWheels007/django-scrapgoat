@@ -8,18 +8,13 @@ from django.dispatch import receiver
 
 class User(AbstractUser):
     pass
-    # name = models.CharField(max_length=200, blank=True, null=True)
-    # phone = models.CharField(max_length=200, blank=True, null=True)
-    # cell = models.CharField(max_length=200, blank=True, null=True)
-    #
-    # def __str__(self):
-    #     return f'name={self.name}, email={self.email}, phone={self.phone}, cell={self.cell}'
 
 
 class Profile(models.Model):
 
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, )
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, blank=True, null=True)
+    email = models.EmailField(max_length=200, blank=True, null=True)
     phone = models.CharField(max_length=200, blank=True, null=True)
     cell = models.CharField(max_length=200, blank=True, null=True)
 
@@ -60,7 +55,7 @@ class Pickup(models.Model):
 
 class UserSavedLocation(models.Model):
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True)
     address = models.CharField(max_length=200)
 
     def __str__(self):

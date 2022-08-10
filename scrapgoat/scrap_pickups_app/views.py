@@ -4,7 +4,8 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.forms.models import model_to_dict
 
-from .forms import PickupForm, ProfileForm
+from .forms import PickupForm, ProfileForm, UserSavedLocationForm
+from .models import UserSavedLocation
 
 
 def index(request):
@@ -16,9 +17,12 @@ def index(request):
             print(f'user={request.user}')
             pickup.user = request.user if request.user.is_authenticated else None
             pickup.save()
-            redirect('index')
+            return redirect('index')
     else:
-        pickup_form = PickupForm()
+        if request.user.is_authenticated:
+            pickup_form = PickupForm(instance=request.user.profile)
+        else:
+            pickup_form = PickupForm()
 
     content = {'form': pickup_form}
 
@@ -38,12 +42,29 @@ def logout(request):
 def set_user_info(request):
     if request.method == 'POST':
         profile_form = ProfileForm(request.POST, instance=request.user.profile)
+        usl_form = UserSavedLocationForm(request.POST, instance=request.user.profile)
 
         if profile_form.is_valid():
-            profile_form.save()
+            profile = profile_form.save()
+
+            if usl_form.is_valid():
+                usls = usl_form.save(commit=False)
+                print(usls)
+                for usl in usls:
+                    usl.profile = profile
+                    print(model_to_dict(usl))
+                    usl.save()
+
+            for usl in usl_form.deleted_objects:
+                usl.delete()
+
+        return redirect('profile_info')
+
     else:
         profile_form = ProfileForm(initial=model_to_dict(request.user), instance=request.user.profile)
+        usl_form = UserSavedLocationForm(queryset=UserSavedLocation.objects
+                                         .filter(profile=request.user.profile), instance=request.user.profile)
 
-    content = {'form': profile_form}
+    content = {'form': profile_form, 'usls': usl_form}
 
     return render(request, 'scrap_pickups_app/profile.html', content)
