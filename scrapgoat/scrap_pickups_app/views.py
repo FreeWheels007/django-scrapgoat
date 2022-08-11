@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.forms.models import model_to_dict
 
-from .forms import PickupForm, ProfileForm, UserSavedLocationForm
+from .forms import PickupForm, ProfileForm, UserSavedLocationForm, ListTextWidget
 from .models import UserSavedLocation
 
 
@@ -22,10 +22,10 @@ def index(request):
     else:
         if request.user.is_authenticated:
             address_query = UserSavedLocation.objects.filter(profile=request.user.profile).values()
-            address_query = [(value['id'], value['address']) for value in address_query]
+            address_query = [value['address'] for value in address_query]
             print(f'query into intit = {address_query}')
             pickup_form = PickupForm(instance=request.user.profile)
-            pickup_form.fields['location'] = django.forms.ChoiceField(choices=address_query)
+            pickup_form.fields['location'].widget = ListTextWidget(data_list=address_query, name='addresses')
         else:
             pickup_form = PickupForm()
 
