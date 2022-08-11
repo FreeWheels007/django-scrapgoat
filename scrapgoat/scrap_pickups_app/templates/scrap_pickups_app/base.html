@@ -22,6 +22,21 @@
                         <a class="nav-link active" aria-current="page" href="login/auth0">Log In</a>
                     </li>
                 </ul>
+                {% elif perms.scrap_pickups_app.view_pickup %}
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Post Pickup</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile_info' %}">User Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'view_pickups' select='Pending' %}">Pending Pickups</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                    </li>
+                </ul>
                 {% else %}
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">

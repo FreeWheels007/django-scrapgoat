@@ -1,0 +1,20 @@
+{% extends 'scrap_pickups_app/base.html' %}
+{% block title %}{{select}} Pickups{% endblock %}
+{% block content %}
+<h1>{{select}} Pickups</h1>
+<hr/>
+<p>
+    List of All Pending Pickups
+</p>
+
+<!--Form when user is not logged in-->
+<div align="left">
+    {% for pickup in pickups %}
+    <p>{{pickup.id}}</p>
+    <p>{{pickup.location}}</p>
+    <p>{{pickup.date_posted}}</p>
+    <a href="{% url 'view_pickups' select=pickup.id %}">See details</a>
+    <hr/>
+    {% endfor %}
+</div>
+{% endblock %}

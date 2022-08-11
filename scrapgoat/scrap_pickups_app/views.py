@@ -2,11 +2,11 @@ import django.forms
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout as django_logout
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.forms.models import model_to_dict
 
 from .forms import PickupForm, ProfileForm, UserSavedLocationForm, ListTextWidget
-from .models import UserSavedLocation
+from .models import UserSavedLocation, Pickup
 
 
 def index(request):
@@ -15,7 +15,6 @@ def index(request):
 
         if pickup_form.is_valid():
             pickup = pickup_form.save(commit=False)
-            print(f'user={request.user}')
             pickup.user = request.user if request.user.is_authenticated else None
             pickup.save()
             return redirect('index')
@@ -23,7 +22,6 @@ def index(request):
         if request.user.is_authenticated:
             address_query = UserSavedLocation.objects.filter(profile=request.user.profile).values()
             address_query = [value['address'] for value in address_query]
-            print(f'query into intit = {address_query}')
             pickup_form = PickupForm(instance=request.user.profile)
             pickup_form.fields['location'].widget = ListTextWidget(data_list=address_query, name='addresses')
         else:
@@ -73,3 +71,25 @@ def set_user_info(request):
     content = {'form': profile_form, 'usls': usl_form}
 
     return render(request, 'scrap_pickups_app/profile.html', content)
+
+
+@login_required
+@permission_required('scrap_pickups_app.view_pickup', raise_exception=True)
+def view_pickups(request, select):
+    print(select)
+    if select == 'Pending':
+        pickups = Pickup.objects.filter(status=Pickup.Status.PENDING).order_by('-date_posted')
+        print(pickups)
+
+        content = {'pickups': pickups, 'select': select}
+
+        return render(request, 'scrap_pickups_app/pickups.html', content)
+    else:
+        try:
+            pickup = Pickup.objects.get(id=int(select))
+        except Pickup.DoesNotExist:
+            return redirect('index')
+
+        content = {'pickup': pickup}
+
+        return render(request, 'scrap_pickups_app/pickup_details.html', content)
