@@ -1,3 +1,4 @@
+import django.forms
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout as django_logout
 from django.conf import settings
@@ -20,7 +21,11 @@ def index(request):
             return redirect('index')
     else:
         if request.user.is_authenticated:
+            address_query = UserSavedLocation.objects.filter(profile=request.user.profile).values()
+            address_query = [(value['id'], value['address']) for value in address_query]
+            print(f'query into intit = {address_query}')
             pickup_form = PickupForm(instance=request.user.profile)
+            pickup_form.fields['location'] = django.forms.ChoiceField(choices=address_query)
         else:
             pickup_form = PickupForm()
 
