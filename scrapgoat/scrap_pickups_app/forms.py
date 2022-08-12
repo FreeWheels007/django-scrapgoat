@@ -33,6 +33,7 @@ class PickupForm(ModelForm):
             'cell',
             'location',
             'details',
+            'scrap_image',
         )
         exclude = (
             'user',

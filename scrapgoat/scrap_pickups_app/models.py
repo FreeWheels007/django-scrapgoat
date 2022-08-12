@@ -4,6 +4,8 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from pathlib import Path
+from uuid import uuid4
 
 
 class User(AbstractUser):
@@ -30,6 +32,12 @@ def save_profile(sender, instance, **kwargs):
     instance.profile.save()
 
 
+def image_file_name(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f'user{instance.user.id}_{uuid4().hex}.{ext}'
+    return Path('images/') / filename
+
+
 class Pickup(models.Model):
 
     class Status(models.TextChoices):
@@ -40,10 +48,11 @@ class Pickup(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=200)
     email = models.EmailField(max_length=200)
-    phone = models.CharField(max_length=200)
+    phone = models.CharField(max_length=200, blank=True, null=True)
     cell = models.CharField(max_length=200)
     location = models.CharField(max_length=200)
     details = models.CharField(max_length=500)
+    scrap_image = models.ImageField(blank=True, null=True, upload_to=image_file_name)
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
     date_posted = models.DateTimeField(auto_now_add=True, auto_now=False)
     date_finished = models.DateTimeField(blank=True, null=True)

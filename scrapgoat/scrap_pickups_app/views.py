@@ -12,7 +12,7 @@ from .models import UserSavedLocation, Pickup
 
 def index(request):
     if request.method == 'POST':
-        pickup_form = PickupForm(request.POST)
+        pickup_form = PickupForm(request.POST, request.FILES)
 
         if pickup_form.is_valid():
             pickup = pickup_form.save(commit=False)

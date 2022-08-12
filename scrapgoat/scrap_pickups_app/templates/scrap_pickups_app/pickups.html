@@ -10,7 +10,7 @@
 <!--Form when user is not logged in-->
 <div align="left">
     {% for pickup in pickups %}
-    <p>{{pickup.id}}</p>
+    <p>{{pickup.name}}</p>
     <p>{{pickup.location}}</p>
     <p>{{pickup.date_posted}}</p>
     <a href="{% url 'view_pickups' select=pickup.id %}">See details</a>

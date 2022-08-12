@@ -10,7 +10,7 @@
 
 <!--Form when user is not logged in-->
 <div align="left">
-    <form method="post" action="{% url 'index' %}">
+    <form method="post" action="{% url 'index' %}" enctype="multipart/form-data">
         {% csrf_token %}
         {{form.as_p}}
         <button type="submit" class="btn btn-primary">Submit</button>

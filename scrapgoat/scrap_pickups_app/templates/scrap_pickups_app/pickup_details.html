@@ -13,6 +13,9 @@
     <p>Posted on: {{pickup.date_posted}}</p>
     <p>Details: {{pickup.details}}</p>
     <p>Cell: {{pickup.cell}} Phone: {{pickup.phone}}</p>
+    {% if pickup.scrap_image %}
+    <img src="{{pickup.scrap_image.url}}">
+    {% endif %}
     <form method="post" action="{% url 'change_pickup_status' select=select %}">
         {% csrf_token %}
         {{cs_form}}
