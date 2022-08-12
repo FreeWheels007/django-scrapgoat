@@ -29,8 +29,8 @@ class PickupForm(ModelForm):
         fields = (
             'name',
             'email',
-            'phone',
             'cell',
+            'phone',
             'location',
             'details',
             'scrap_image',

@@ -11,15 +11,19 @@ from .models import UserSavedLocation, Pickup
 
 
 def index(request):
+    # Post new pickup request
     if request.method == 'POST':
         pickup_form = PickupForm(request.POST, request.FILES)
 
         if pickup_form.is_valid():
             pickup = pickup_form.save(commit=False)
+            # check if user is loggged in, not required
             pickup.user = request.user if request.user.is_authenticated else None
             pickup.save()
             return redirect('index')
+    # Get template
     else:
+        # Pre-populate form if user logged in
         if request.user.is_authenticated:
             address_query = UserSavedLocation.objects.filter(profile=request.user.profile).values()
             address_query = [value['address'] for value in address_query]
@@ -42,6 +46,7 @@ def logout(request):
     return redirect(f'https://{domain}/v2/logout?client_id={client_id}&returnTo={return_to}')
 
 
+# Collect user profile info to prefill pickup form
 @login_required
 def set_user_info(request):
     if request.method == 'POST':
@@ -72,9 +77,11 @@ def set_user_info(request):
     return render(request, 'scrap_pickups_app/profile.html', content)
 
 
+# Allow moderators to view all posted pickup requests
 @login_required
 @permission_required('scrap_pickups_app.view_pickup', raise_exception=True)
 def view_pickups(request, select):
+    # View list of pickups
     if select in ('Pending', 'Completed', 'Cancelled'):
         if select == 'Pending':
             status = Pickup.Status.PENDING
@@ -88,6 +95,7 @@ def view_pickups(request, select):
         content = {'pickups': pickups, 'select': select}
 
         return render(request, 'scrap_pickups_app/pickups.html', content)
+    # Or view individual pickups
     else:
         try:
             pickup_id = int(select)
@@ -105,6 +113,9 @@ def view_pickups(request, select):
         return render(request, 'scrap_pickups_app/pickup_details.html', content)
 
 
+# Allow moderators to change pickup status
+@login_required
+@permission_required('scrap_pickups_app.change_pickup', raise_exception=True)
 def change_pickup_status(request, select):
     if request.method == 'POST':
         try:
