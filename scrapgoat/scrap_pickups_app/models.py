@@ -50,7 +50,7 @@ class Pickup(models.Model):
 
     def __str__(self):
         return f'name={self.name}, email={self.email}, loc={self.location}, status={self.status}' \
-               f'created={self.date_posted}'
+               f'created={self.date_posted}, finished={self.date_finished}'
 
 
 class UserSavedLocation(models.Model):

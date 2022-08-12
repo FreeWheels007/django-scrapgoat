@@ -1,4 +1,6 @@
 from django.forms import ModelForm, inlineformset_factory, TextInput
+from django import forms
+from .models import Pickup
 
 from .models import Pickup, Profile, UserSavedLocation
 
@@ -58,3 +60,13 @@ UserSavedLocationForm = inlineformset_factory(
     fields=('address',),
     extra=1
 )
+
+
+class ChangeStatusForm(ModelForm):
+
+    class Meta:
+
+        model = Pickup
+        fields = ('status',)
+        exclude = '__all__'
+        widgets = {'status': forms.RadioSelect}

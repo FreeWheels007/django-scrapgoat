@@ -9,10 +9,14 @@
 
 <!--Form when user is not logged in-->
 <div align="left">
-    <p>{{pickup.location}}</p>
-    <p>{{pickup.date_posted}}</p>
-    <p>{{pickup.details}}</p>
+    <p>Location: {{pickup.location}}</p>
+    <p>Posted on: {{pickup.date_posted}}</p>
+    <p>Details: {{pickup.details}}</p>
     <p>Cell: {{pickup.cell}} Phone: {{pickup.phone}}</p>
-    <p>Complete or Delete</p>
+    <form method="post" action="{% url 'change_pickup_status' select=select %}">
+        {% csrf_token %}
+        {{cs_form}}
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
 </div>
 {% endblock %}

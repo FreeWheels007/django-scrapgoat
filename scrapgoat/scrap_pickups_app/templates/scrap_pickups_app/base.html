@@ -34,6 +34,12 @@
                         <a class="nav-link" href="{% url 'view_pickups' select='Pending' %}">Pending Pickups</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'view_pickups' select='Completed' %}">Completed Pickups</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'view_pickups' select='Cancelled' %}">Cancelled Pickups</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
                     </li>
                 </ul>

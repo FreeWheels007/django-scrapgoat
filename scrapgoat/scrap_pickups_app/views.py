@@ -4,8 +4,9 @@ from django.contrib.auth import logout as django_logout
 from django.conf import settings
 from django.contrib.auth.decorators import login_required, permission_required
 from django.forms.models import model_to_dict
+from datetime import datetime
 
-from .forms import PickupForm, ProfileForm, UserSavedLocationForm, ListTextWidget
+from .forms import PickupForm, ProfileForm, UserSavedLocationForm, ListTextWidget, ChangeStatusForm
 from .models import UserSavedLocation, Pickup
 
 
@@ -52,10 +53,8 @@ def set_user_info(request):
 
             if usl_form.is_valid():
                 usls = usl_form.save(commit=False)
-                print(usls)
                 for usl in usls:
                     usl.profile = profile
-                    print(model_to_dict(usl))
                     usl.save()
 
             for usl in usl_form.deleted_objects:
@@ -76,20 +75,55 @@ def set_user_info(request):
 @login_required
 @permission_required('scrap_pickups_app.view_pickup', raise_exception=True)
 def view_pickups(request, select):
-    print(select)
-    if select == 'Pending':
-        pickups = Pickup.objects.filter(status=Pickup.Status.PENDING).order_by('-date_posted')
-        print(pickups)
+    if select in ('Pending', 'Completed', 'Cancelled'):
+        if select == 'Pending':
+            status = Pickup.Status.PENDING
+        elif select == 'Completed':
+            status = Pickup.Status.COMPLETED
+        else:
+            status = Pickup.Status.CANCELLED
+
+        pickups = Pickup.objects.filter(status=status).order_by('-date_posted')
 
         content = {'pickups': pickups, 'select': select}
 
         return render(request, 'scrap_pickups_app/pickups.html', content)
     else:
         try:
-            pickup = Pickup.objects.get(id=int(select))
-        except Pickup.DoesNotExist:
+            pickup_id = int(select)
+            pickup = Pickup.objects.get(id=pickup_id)
+            cs_form = ChangeStatusForm(initial=model_to_dict(pickup))
+            # print(f'cs form={cs_form}')
+        except (Pickup.DoesNotExist, ValueError) as e:
+            print('Exception in view_pickups')
+            print(e)
+            print('redirecting to index')
             return redirect('index')
 
-        content = {'pickup': pickup}
+        content = {'pickup': pickup, 'select': select, 'cs_form': cs_form}
 
         return render(request, 'scrap_pickups_app/pickup_details.html', content)
+
+
+def change_pickup_status(request, select):
+    if request.method == 'POST':
+        try:
+            pickup_id = int(select)
+            pickup = Pickup.objects.get(id=pickup_id)
+        except (Pickup.DoesNotExist, ValueError) as e:
+            print('Exception in view_pickups')
+            print(e)
+            print('redirecting to index')
+            return redirect('index')
+
+        cs_form = ChangeStatusForm(request.POST, instance=pickup)
+        if cs_form.is_valid():
+            cs_form.save()
+            print(datetime.now())
+            pickup.date_finished = datetime.now()
+            pickup.save(update_fields=['date_finished'])
+
+        return redirect('view_pickups', select=select)
+    else:
+        return redirect('index')
+
