@@ -24,20 +24,25 @@
                 </ul>
                 {% elif perms.scrap_pickups_app.view_pickup %}
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    {% url 'index' as url %}
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Post Pickup</a>
+                        <a class="nav-link {% if request.path == url %}active{% endif %}" href="{{url}}">Post Pickup</a>
                     </li>
+                    {% url 'profile_info' as url %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profile_info' %}">User Settings</a>
+                        <a class="nav-link {% if request.path == url %}active{% endif %}" href="{{url}}">User Settings</a>
                     </li>
+                    {% url 'view_pickups' select='Pending' as url %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'view_pickups' select='Pending' %}">Pending Pickups</a>
+                        <a class="nav-link {% if request.path == url %}active{% endif %}" href="{{url}}">Pending Pickups</a>
                     </li>
+                    {% url 'view_pickups' select='Completed' as url %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'view_pickups' select='Completed' %}">Completed Pickups</a>
+                        <a class="nav-link {% if request.path == url %}active{% endif %}" href="{{url}}">Completed Pickups</a>
                     </li>
+                    {% url 'view_pickups' select='Cancelled' as url %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'view_pickups' select='Cancelled' %}">Cancelled Pickups</a>
+                        <a class="nav-link {% if request.path == url %}active{% endif %}" href="{{url}}">Cancelled Pickups</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
@@ -45,11 +50,13 @@
                 </ul>
                 {% else %}
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    {% url 'index' as url %}
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Post Pickup</a>
+                        <a class="nav-link {% if request.path == url %}active{% endif %}" href="{{url}}">Post Pickup</a>
                     </li>
+                    {% url 'profile_info' as url %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profile_info' %}">User Settings</a>
+                        <a class="nav-link {% if request.path == url %}active{% endif %}" href="{{url}}">User Settings</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
@@ -63,5 +70,6 @@
     <div class="container" align="center">
     {% block content %}{% endblock %}
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
 </body>
 </html>

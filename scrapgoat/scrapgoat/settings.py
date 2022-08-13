@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'scrap_pickups_app',
     'social_django',
     'django_cleanup.apps.CleanupConfig',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -147,3 +148,6 @@ AUTHENTICATION_BACKENDS = {
 LOGIN_URL = '/login/auth0'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# Crispy Forms
+# CRISPY_TEMPLATE_PACK = 'uni_form'

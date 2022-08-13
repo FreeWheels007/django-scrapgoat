@@ -1,4 +1,5 @@
 {% extends 'scrap_pickups_app/base.html' %}
+{% load crispy_forms_tags %}
 {% block title %}Scrapgoat Home{% endblock %}
 {% block content %}
 <h1>Scapegoat Pickups</h1>
@@ -12,7 +13,7 @@
 <div align="left">
     <form method="post" action="{% url 'index' %}" enctype="multipart/form-data">
         {% csrf_token %}
-        {{form.as_p}}
+        {{form|crispy}}
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
