@@ -1,14 +1,18 @@
 {% extends 'scrap_pickups_app/base.html' %}
 {% block title %}Pickup{% endblock %}
 {% block content %}
-<h1>Pickup</h1>
-<hr/>
-<p>
-    Pickup details for {{pickup.name}}
-</p>
+<div class="row">
+    <div class="col">
+        <h1>Pickup</h1>
+        <hr/>
+        <p>
+            Pickup details for {{pickup.name}}
+        </p>
+    </div>
+</div>
+<br>
 
-<!--Form when user is not logged in-->
-<div align="left">
+<div class="row" align="left">
     <p>Location: {{pickup.location}}</p>
     <p>Posted on: {{pickup.date_posted}}</p>
     <p>Details: {{pickup.details}}</p>

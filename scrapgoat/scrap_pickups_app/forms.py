@@ -41,6 +41,14 @@ class PickupForm(ModelForm):
             'date_posted',
             'date_finished',
         )
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.TextInput(attrs={'class': 'form-control'}),
+            'cell': forms.TextInput(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'location': forms.TextInput(attrs={'class': 'form-control'}),
+            'details': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
+        }
 
 
 class ProfileForm(ModelForm):
@@ -48,10 +56,21 @@ class ProfileForm(ModelForm):
     class Meta:
 
         model = Profile
-        fields = '__all__'
+        fields = (
+            'name',
+            'email',
+            'cell',
+            'phone',
+        )
         exclude = (
             'user',
         )
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.TextInput(attrs={'class': 'form-control'}),
+            'cell': forms.TextInput(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+        }
 
 
 UserSavedLocationForm = inlineformset_factory(
@@ -59,7 +78,8 @@ UserSavedLocationForm = inlineformset_factory(
     UserSavedLocation,
     form=ProfileForm,
     fields=('address',),
-    extra=1
+    extra=1,
+    widgets={'address': forms.TextInput(attrs={'class': 'form-control'})}
 )
 
 

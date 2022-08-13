@@ -2,27 +2,38 @@
 {% load crispy_forms_tags %}
 {% block title %}Profile Page{% endblock %}
 {% block content %}
-<h1>Profile Info</h1>
-<hr/>
-<p>
-    You can save your details and submit pickups faster.
-</p>
-
-<!--Form when user is not logged in-->
-<div align="left">
-    <form method="post" action="{% url 'profile_info' %}">
-        {% csrf_token %}
-        {{form|crispy}}
-        <br/>
-        <h3>Save Addresses</h3>
+<div class="row">
+    <div class="col">
+        <h1>Profile Info</h1>
         <hr/>
-        {{usls.management_form}}
-        {% for usl in usls %}
-        <div>
-            {{usl|crispy}}
-        </div>
-        {% endfor %}
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+        <p>
+            You can save your details and submit pickups faster.
+        </p>
+    </div>
+</div>
+<br>
+
+<div class="row">
+    <div class="col-md-6" align="left">
+        <form method="post" action="{% url 'profile_info' %}">
+            {% csrf_token %}
+            {{form|crispy}}
+            <br/>
+            <h3>Save Addresses</h3>
+            <hr/>
+            {{usls.management_form}}
+            {% for usl in usls %}
+            <div>
+                {{usl|crispy}}
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <div class="col-md-6" align="left">
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+    </div>
 </div>
 {% endblock %}

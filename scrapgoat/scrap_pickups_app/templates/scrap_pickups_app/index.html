@@ -2,19 +2,31 @@
 {% load crispy_forms_tags %}
 {% block title %}Scrapgoat Home{% endblock %}
 {% block content %}
-<h1>Scapegoat Pickups</h1>
-<hr/>
-<p>
-    You may submit a scrap pick up request below.<br/>
-    You can also login to save your user info and set common pick up locations.
-</p>
+<div class="row">
+    <div class="col">
+        <h1>Scapegoat Pickups</h1>
+        <hr/>
+        <p>
+            You may submit a scrap pick up request below.<br/>
+            You can also login to save your user info and set common pick up locations.
+        </p>
+    </div>
+</div>
+<br>
 
-<!--Form when user is not logged in-->
-<div align="left">
-    <form method="post" action="{% url 'index' %}" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{form|crispy}}
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+<div class="row">
+    <div class="col-md-6" align="left">
+        <form method="post" action="{% url 'index' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form|crispy}}
+            <br>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <div class="col-md-6" align="left">
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+    </div>
 </div>
 {% endblock %}

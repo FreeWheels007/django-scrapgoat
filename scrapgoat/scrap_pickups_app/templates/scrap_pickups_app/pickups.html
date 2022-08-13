@@ -1,14 +1,19 @@
 {% extends 'scrap_pickups_app/base.html' %}
 {% block title %}{{select}} Pickups{% endblock %}
 {% block content %}
-<h1>{{select}} Pickups</h1>
-<hr/>
-<p>
-    List of All Pending Pickups
-</p>
+<div class="row">
+    <div class="col">
+        <h1>{{select}} Pickups</h1>
+        <hr/>
+        <p>
+            List of All {{select}} Pickups
+        </p>
+    </div>
+</div>
+<br>
 
-<!--Form when user is not logged in-->
-<div align="left">
+<!--Display pickups as list overview-->
+<div class="row" align="left">
     {% for pickup in pickups %}
     <p>{{pickup.name}}</p>
     <p>{{pickup.location}}</p>

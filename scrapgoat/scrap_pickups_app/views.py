@@ -28,7 +28,8 @@ def index(request):
             address_query = UserSavedLocation.objects.filter(profile=request.user.profile).values()
             address_query = [value['address'] for value in address_query]
             pickup_form = PickupForm(instance=request.user.profile)
-            pickup_form.fields['location'].widget = ListTextWidget(data_list=address_query, name='addresses')
+            pickup_form.fields['location'].widget = ListTextWidget(data_list=address_query, name='addresses',
+                                                                   attrs={'class': 'form-control'})
         else:
             pickup_form = PickupForm()
 
