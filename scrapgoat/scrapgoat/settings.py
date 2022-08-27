@@ -29,6 +29,14 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+EMAIL_HOST = 'smtp.zoho.com'
+EMAIL_HOST_USER = 'bross.scrapgoat@zohomail.com'
+EMAIL_HOST_PASSWORD = env('ZOHO_PW')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 ALLOWED_HOSTS = ['localhost', 'scrapgoat-django-env.eba-m7wci2cz.us-west-2.elasticbeanstalk.com']
 
 # Application definition

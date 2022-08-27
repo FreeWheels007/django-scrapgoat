@@ -1,25 +1,34 @@
 {% extends 'scrap_pickups_app/base.html' %}
+{% load crispy_forms_tags %}
 {% block title %}Pickup{% endblock %}
 {% block content %}
 <div class="row">
     <div class="col">
-        <h1>Pickup</h1>
+        <h1>Pickup Details</h1>
         <hr/>
-        <p>
-            Pickup details for {{pickup.name}}
-        </p>
+        <h3>
+            {{pickup.name}}
+        </h3>
     </div>
 </div>
 <br>
 
-<div class="row" align="left">
-    <p>Location: {{pickup.location}}</p>
-    <p>Posted on: {{pickup.date_posted}}</p>
-    <p>Details: {{pickup.details}}</p>
-    <p>Cell: {{pickup.cell}} Phone: {{pickup.phone}}</p>
-    {% if pickup.scrap_image %}
-    <img src="{{pickup.scrap_image.url}}">
-    {% endif %}
+<div class="row">
+    <div class="col-md-6" align="left">
+        <p>Location: {{pickup.location}}</p>
+        <p>Email: {{pickup.email}}</p>
+        <p>Cell: {{pickup.cell}} Phone: {{pickup.phone}}</p>
+        <p>Posted on: {{pickup.date_posted}}</p>
+        <p>Details: {{pickup.details}}</p>
+    </div>
+    <div class="col-md-6" align="left">
+        {% if pickup.scrap_image %}
+        <img src="{{pickup.scrap_image.url}}" class="img-fluid" alt="Optional image of pickup request">
+        {% endif %}
+    </div>
+</div>
+<hr/>
+<div class="row">
     <form method="post" action="{% url 'change_pickup_status' select=select %}">
         {% csrf_token %}
         {{cs_form}}

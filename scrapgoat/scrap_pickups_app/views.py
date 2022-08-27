@@ -2,6 +2,7 @@ import django.forms
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout as django_logout
 from django.conf import settings
+from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import login_required, permission_required
 from django.forms.models import model_to_dict
 from datetime import datetime
@@ -20,6 +21,15 @@ def index(request):
             # check if user is loggged in, not required
             pickup.user = request.user if request.user.is_authenticated else None
             pickup.save()
+            # send email notification to Moderators
+            email = EmailMessage(
+                subject=f'New Pickup request from {pickup.name}',
+                body=pickup.to_email(),
+                from_email=settings.EMAIL_HOST_USER,
+                to=['bernardross0763@gmail.com'],
+                headers={'Content-Type': 'text/plain'},
+            )
+            email.send(fail_silently=True)
             return redirect('index')
     # Get template
     else:
@@ -43,7 +53,8 @@ def logout(request):
     django_logout(request)
     domain = settings.SOCIAL_AUTH_AUTH0_DOMAIN
     client_id = settings.SOCIAL_AUTH_AUTH0_KEY
-    return_to = 'http://scrapgoat-django-env.eba-m7wci2cz.us-west-2.elasticbeanstalk.com'  # this can be current domain
+    # MUST CHANGE THIS FOR EACH EB!!!
+    return_to = 'http://localhost:8000'  # this can be current domain
     return redirect(f'https://{domain}/v2/logout?client_id={client_id}&returnTo={return_to}')
 
 
@@ -131,7 +142,6 @@ def change_pickup_status(request, select):
         cs_form = ChangeStatusForm(request.POST, instance=pickup)
         if cs_form.is_valid():
             cs_form.save()
-            print(datetime.now())
             pickup.date_finished = datetime.now()
             pickup.save(update_fields=['date_finished'])
 

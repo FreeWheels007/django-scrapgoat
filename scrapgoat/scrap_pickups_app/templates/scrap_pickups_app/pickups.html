@@ -14,12 +14,27 @@
 
 <!--Display pickups as list overview-->
 <div class="row" align="left">
-    {% for pickup in pickups %}
-    <p>{{pickup.name}}</p>
-    <p>{{pickup.location}}</p>
-    <p>{{pickup.date_posted}}</p>
-    <a href="{% url 'view_pickups' select=pickup.id %}">See details</a>
-    <hr/>
-    {% endfor %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Date Posted</th>
+                <th>See Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pickup in pickups %}
+            <tr>
+                <td>{{pickup.name}}</td>
+                <td>{{pickup.location}}</td>
+                <td>{{pickup.date_posted}}</td>
+                <td>
+                    <a href="{% url 'view_pickups' select=pickup.id %}">Click Here</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

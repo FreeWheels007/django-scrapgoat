@@ -61,6 +61,10 @@ class Pickup(models.Model):
         return f'name={self.name}, email={self.email}, loc={self.location}, status={self.status}' \
                f'created={self.date_posted}, finished={self.date_finished}'
 
+    def to_email(self):
+        return f'{self.name} has posted a new pickup request at {self.location} on {self.date_posted}.\n' \
+               f'View further details at LINK_DOMAIN/pickups/{self.id}/'
+
 
 class UserSavedLocation(models.Model):
 
