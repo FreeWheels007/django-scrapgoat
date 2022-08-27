@@ -1,14 +1,15 @@
-import django.forms
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout as django_logout
 from django.conf import settings
 from django.core.mail import EmailMessage
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required, permission_required
 from django.forms.models import model_to_dict
 from datetime import datetime
 
 from .forms import PickupForm, ProfileForm, UserSavedLocationForm, ListTextWidget, ChangeStatusForm
 from .models import UserSavedLocation, Pickup
+from django.contrib.auth.models import Group
 
 
 def index(request):
@@ -21,12 +22,14 @@ def index(request):
             # check if user is loggged in, not required
             pickup.user = request.user if request.user.is_authenticated else None
             pickup.save()
+
             # send email notification to Moderators
+            mod_emails = [user.profile.email for user in Group.objects.get(name='Moderators').user_set.all()]
             email = EmailMessage(
                 subject=f'New Pickup request from {pickup.name}',
                 body=pickup.to_email(),
                 from_email=settings.EMAIL_HOST_USER,
-                to=['bernardross0763@gmail.com'],
+                to=mod_emails,
                 headers={'Content-Type': 'text/plain'},
             )
             email.send(fail_silently=True)
@@ -104,7 +107,15 @@ def view_pickups(request, select):
 
         pickups = Pickup.objects.filter(status=status).order_by('-date_posted')
 
-        content = {'pickups': pickups, 'select': select}
+        pickups_pages = Paginator(pickups, 10)
+        page_num = request.GET.get('page', 1)
+
+        try:
+            pickups_page = pickups_pages.page(page_num)
+        except (EmptyPage, PageNotAnInteger):
+            pickups_page = pickups_pages.page(1)
+
+        content = {'pickups': pickups_page, 'select': select}
 
         return render(request, 'scrap_pickups_app/pickups.html', content)
     # Or view individual pickups
